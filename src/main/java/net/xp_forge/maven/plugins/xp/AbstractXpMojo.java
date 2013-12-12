@@ -10,6 +10,7 @@ import java.io.File;
 import java.util.Map;
 import java.util.Set;
 import java.util.List;
+import java.util.LinkedList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.ArrayList;
@@ -252,6 +253,27 @@ public abstract class AbstractXpMojo extends AbstractMojo {
 
     // Specified artifact not found
     return null;
+  }
+
+
+  /**
+   * Helper function to find a list of project artifacts
+   *
+   * @param  java.lang.String groupId
+   * @return org.apache.maven.artifact.Artifact null if the specified artifact cannot be found
+   */
+  @SuppressWarnings("unchecked")
+  protected Artifact[] findArtifact(String groupId) {
+    List<Artifact> result = new LinkedList<Artifact>();
+
+    for (Artifact artifact : (Iterable<Artifact>)this.project.getArtifacts()) {
+      if (artifact.getGroupId().equals(groupId)) {
+        result.add(artifact);
+      }
+    }
+
+    // Return found artifacts
+    return result.toArray(new Artifact[]{});
   }
 
   /**

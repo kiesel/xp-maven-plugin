@@ -192,20 +192,13 @@ public class InitializeMojo extends AbstractXpMojo {
 
     // Unpack bootstrap
     File toolsDirectory= new File(targetDirectory, "tools");
-    UnArchiver unArchiver= ArchiveUtils.getUnArchiver(coreArtifact);
-    unArchiver.extract("tools/lang.base.php", toolsDirectory);
-    unArchiver.extract("tools/class.php", toolsDirectory);
-    unArchiver.extract("tools/web.php", toolsDirectory);
-    unArchiver.extract("tools/xar.php", toolsDirectory);
 
-    FileSelector toolsSelector = new FileSelector() {
+    for (Artifact artifact : this.findArtifact(XP_FRAMEWORK_GROUP_ID)) {
+      getLog().debug("Extracting bootstrap from " + artifact.getGroupId() + ":" + artifact.getArtifactId());
+      UnArchiver unArchiver= ArchiveUtils.getUnArchiver(artifact);
+      unArchiver.extract("tools", toolsDirectory.getAbsoluteFile());
+    }
 
-      @Override
-      public boolean isSelected(FileInfo file) {
-        System.out.println("Checking file " + file.toString());
-        return file.getName().startsWith("tools/");
-      }
-    };
 
     // Create [target/bootstrap/boot.pth]
     File pthFile= new File(targetDirectory, "boot.pth");
