@@ -21,6 +21,8 @@ import org.apache.maven.plugin.MojoExecutionException;
 
 import org.codehaus.plexus.util.StringUtils;
 import org.codehaus.plexus.archiver.UnArchiver;
+import org.codehaus.plexus.components.io.fileselectors.FileSelector;
+import org.codehaus.plexus.components.io.fileselectors.FileInfo;
 
 import net.xp_forge.maven.plugins.xp.io.PthFile;
 import net.xp_forge.maven.plugins.xp.util.FileUtils;
@@ -195,6 +197,15 @@ public class InitializeMojo extends AbstractXpMojo {
     unArchiver.extract("tools/class.php", toolsDirectory);
     unArchiver.extract("tools/web.php", toolsDirectory);
     unArchiver.extract("tools/xar.php", toolsDirectory);
+
+    FileSelector toolsSelector = new FileSelector() {
+
+      @Override
+      public boolean isSelected(FileInfo file) {
+        System.out.println("Checking file " + file.toString());
+        return file.getName().startsWith("tools/");
+      }
+    };
 
     // Create [target/bootstrap/boot.pth]
     File pthFile= new File(targetDirectory, "boot.pth");
